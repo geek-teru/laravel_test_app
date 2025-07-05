@@ -1,0 +1,40 @@
+version: "3"
+services:
+    laravel_mysql:
+        container_name: laravel_mysql.local
+        image: mysql:8.0.32
+        user: mysql
+        platform: linux/x86_64
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: laravel
+            MYSQL_PASSWORD: laravel
+        volumes:
+            - .local/mysql:/var/lib/mysql
+        command:
+            [
+                "--character-set-server=utf8mb4",
+                "--collation-server=utf8mb4_unicode_ci",
+                "--init-connect=SET NAMES utf8mb4",
+                "--sql-mode=",
+                "--default-storage-engine=InnoDB",
+                "--innodb_file_per_table=ON",
+            ]
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-h",
+                    "localhost",
+                    "-u",
+                    "root",
+                    "-proot",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
